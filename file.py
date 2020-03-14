@@ -27,3 +27,5 @@ for i in range(T):
         shuchu.append("NO")
 for i in shuchu:
     print(i)
+for i in shuchu:
+    print(i)

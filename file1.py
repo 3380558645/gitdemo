@@ -66,3 +66,194 @@ king.title("maze")
 king.geometry("+550+250")
 canvas = Canvas(king,bg='orange')
 canvas.grid(row=1,column=1)
+size = askstring("迷宫难度", "迷宫的长和宽", initialvalue="25 25")
+size = [int(x) for x in size.split()]
+def drawCircle(self, x, y, r, **kwargs):
+    return self.create_oval(x-r, y-r, x+r, y+r, **kwargs)
+Maze(size[0],size[1]).draw(10,canvas)
+yuan=drawCircle(canvas, 10,size[0]*10, 5, fill = "red")
+yuan1=drawCircle(canvas, size[1]*10,10, 5, fill = "blue")
+yuan2=drawCircle(canvas,10,size[0]*10, 5, fill = "yellow")
+weizhi=[size[0]-1,0]
+weizhi2=[size[0]-1,0]
+def sear1(l):
+    global search
+    global searched
+    global num
+    search=[[weizhi[0],weizhi[1],""]]
+    searched=[]
+    while len(search)!=0:
+        b=search.pop(0)
+        if [b[0],b[1]] not in searched:
+            if l[b[0]][b[1]][BOTTOM_WALL]==False :
+                search.append([b[0]+1,b[1],b[2]+"U"])
+                num=[b[0]+1,b[1],b[2]+"U"]
+                if num[0]==0 and num[1]==size[1]-1:
+                    break
+            if l[b[0]][b[1]][RIGHT_WALL]==False:
+                search.append([b[0],b[1]+1,b[2]+"L"])
+                num=[b[0],b[1]+1,b[2]+"L"]
+                if num[0]==0 and num[1]==size[1]-1:
+                    break
+            if l[b[0]-1][b[1]][BOTTOM_WALL]==False:
+                search.append([b[0]-1,b[1],b[2]+"D"])
+                num=[b[0]-1,b[1],b[2]+"D"]
+                if num[0]==0 and num[1]==size[1]-1:
+                    break
+            if l[b[0]][b[1]-1][RIGHT_WALL]==False:
+                search.append([b[0],b[1]-1,b[2]+"R"])
+                num=[b[0],b[1]-1,b[2]+"R"]
+                if num[0]==0 and num[1]==size[1]-1:
+                    break
+        searched.append([b[0],b[1]])
+def sear2(l):
+    global search
+    global searched
+    global num
+    search=[[weizhi2[0],weizhi2[1],""]]
+    searched=[]
+    while len(search)!=0:
+        b=search.pop(0)
+        if [b[0],b[1]] not in searched:
+            if l[b[0]][b[1]][BOTTOM_WALL]==False :
+                search.append([b[0]+1,b[1],b[2]+"U"])
+                num=[b[0]+1,b[1],b[2]+"U"]
+                if num[0]==0 and num[1]==size[1]-1:
+                    break
+            if l[b[0]][b[1]][RIGHT_WALL]==False:
+                search.append([b[0],b[1]+1,b[2]+"L"])
+                num=[b[0],b[1]+1,b[2]+"L"]
+                if num[0]==0 and num[1]==size[1]-1:
+                    break
+            if l[b[0]-1][b[1]][BOTTOM_WALL]==False:
+                search.append([b[0]-1,b[1],b[2]+"D"])
+                num=[b[0]-1,b[1],b[2]+"D"]
+                if num[0]==0 and num[1]==size[1]-1:
+                    break
+            if l[b[0]][b[1]-1][RIGHT_WALL]==False:
+                search.append([b[0],b[1]-1,b[2]+"R"])
+                num=[b[0],b[1]-1,b[2]+"R"]
+                if num[0]==0 and num[1]==size[1]-1:
+                    break
+        searched.append([b[0],b[1]])
+def movetringle(event):
+    if event.keysym == 'Up' and maze[weizhi[0]-1][weizhi[1]][BOTTOM_WALL]== False:
+        canvas.move(yuan,0,-10) 
+        weizhi[0]=weizhi[0]-1##第一个参数使画布上所画的形状的ID数字，第二个是对x（水平方向）坐标增加的值，第三个是对y（垂直方向）坐标增加的值
+    elif event.keysym == 'Down' and maze[weizhi[0]][weizhi[1]][BOTTOM_WALL]== False:
+        canvas.move(yuan,0,10)
+        weizhi[0]=weizhi[0]+1
+    elif event.keysym == 'Left' and maze[weizhi[0]][weizhi[1]-1][RIGHT_WALL]== False:
+        canvas.move(yuan,-10,0)
+        weizhi[1]=weizhi[1]-1
+    elif event.keysym =='Right' and maze[weizhi[0]][weizhi[1]][RIGHT_WALL]== False :
+        canvas.move(yuan,10,0)
+        weizhi[1]=weizhi[1]+1
+    else:
+        canvas.move(yuan,0,0)
+    if weizhi==[0,size[1]-1]:
+        messagebox.showinfo(title='Tql!!!', message='你已经通关了，大神1！')
+canvas.bind_all('<KeyPress-Up>',movetringle)  ##让tkinter监视KeyPress事件，当该事件发生时调用movetriangle函数
+canvas.bind_all('<KeyPress-Down>',movetringle)
+canvas.bind_all('<KeyPress-Left>',movetringle)
+canvas.bind_all('<KeyPress-Right>',movetringle)  
+
+
+flag1=0
+flag2=0
+
+def tishi():
+    global l1
+    global flag1
+    if flag1==1:
+        return
+    l1=[]
+    sear1(maze)
+    s=num[2]
+    s=s[::-1]
+    r=size[1]*10
+    c=10
+    for i in s:
+        if i=="L":
+            r-=10
+        elif i=="R":
+            r+=10
+        elif i=="U":
+            c-=10
+        elif i=="D":
+            c+=10
+        if flag1==0:
+            w=drawCircle(canvas, r, c, 3, fill = "pink")
+            l1.append(w)
+    flag1=1
+
+def tishi2():
+    global l2
+    global flag2
+    if flag2==1:
+        return
+    l2=[]
+    sear2(maze)
+    s=num[2]
+    s=s[::-1]
+    r=size[1]*10
+    c=10
+    for i in s:
+        if i=="L":
+            r-=10
+        elif i=="R":
+            r+=10
+        elif i=="U":
+            c-=10
+        elif i=="D":
+            c+=10
+        if flag2==0:
+            v=drawCircle(canvas, r, c, 3, fill = "green")
+            l2.append(v)
+    flag2=1
+def ti():
+    global flag1
+    global flag2
+    for i in l1:
+        canvas.delete(i)
+    for j in l2:
+        canvas.delete(j)
+    flag1=0
+    flag2=0
+
+l = Label(king, bg='red', fg='black',font=('Arial', 12), width=5,text="起点")
+l.grid(row=2,column=0,sticky=NE)
+
+r = Label(king, bg='yellow', fg='black',font=('Arial', 12), width=5,text="终点")
+r.grid(row=0,column=2,sticky=SW)
+
+b = Button(king, text='玩家1提示', font=('Arial', 12), width=10, height=1, command=tishi)
+b.grid(row=2,column=1)
+b2= Button(king, text='玩家2提示', font=('Arial', 12), width=10, height=1, command=tishi2)
+b2.grid(row=3,column=1)
+
+c = Button(king, text='隐藏路线', font=('Arial', 12), width=10, height=1, command=ti)
+c.grid(row=4,column=1)
+def movetringle1(event):
+    if event.keysym == 'W' and maze[weizhi2[0]-1][weizhi2[1]][BOTTOM_WALL]== False:
+        canvas.move(yuan2,0,-10) 
+        weizhi2[0]=weizhi2[0]-1##第一个参数使画布上所画的形状的ID数字，第二个是对x（水平方向）坐标增加的值，第三个是对y（垂直方向）坐标增加的值
+    elif event.keysym == 'S' and maze[weizhi2[0]][weizhi2[1]][BOTTOM_WALL]== False:
+        canvas.move(yuan2,0,10)
+        weizhi2[0]=weizhi2[0]+1
+    elif event.keysym == 'A' and maze[weizhi2[0]][weizhi2[1]-1][RIGHT_WALL]== False:
+        canvas.move(yuan2,-10,0)
+        weizhi2[1]=weizhi2[1]-1
+    elif event.keysym =='D' and maze[weizhi2[0]][weizhi2[1]][RIGHT_WALL]== False :
+        canvas.move(yuan2,10,0)
+        weizhi2[1]=weizhi2[1]+1
+    else:
+        canvas.move(yuan2,0,0)
+    if weizhi2==[0,size[1]-1]:
+        messagebox.showinfo(title='Tql!!!', message='你已经通关了，大神2！')
+canvas.bind_all('<KeyPress-W>',movetringle1)  ##让tkinter监视KeyPress事件，当该事件发生时调用movetriangle函数
+canvas.bind_all('<KeyPress-S>',movetringle1)
+canvas.bind_all('<KeyPress-A>',movetringle1)
+canvas.bind_all('<KeyPress-D>',movetringle1)    
+     
+king.mainloop()
